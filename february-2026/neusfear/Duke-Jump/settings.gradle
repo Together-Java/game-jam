@@ -1,0 +1,5 @@
+rootProject.name = 'DukeGame'
+
+include(":TerminalVelocityEngine2")
+
+include ':GameClient'
