@@ -1,0 +1,60 @@
+plugins {
+    id 'java'
+    id 'application'
+    id("org.openjfx.javafxplugin") version "0.1.0"
+    id("org.beryx.jlink") version "3.2.1"
+}
+
+group = 'tj.things'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+
+def junitVersion = "5.12.1"
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+}
+
+application {
+    mainModule.set("pewpew.main")
+    mainClass.set("tj.things.pewpew.Launcher")
+
+    applicationDefaultJvmArgs = ["--add-exports=javafx.base/com.sun.javafx.event=org.controlsfx.controls",
+                    "--add-opens=javafx.graphics/javafx.scene=org.controlsfx.controls"]
+}
+
+javafx {
+    version = "25"
+    modules =["javafx.controls", "javafx.fxml", "javafx.media"]
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    // JSpecify annotations (for nullness and API contracts)
+    implementation("org.jspecify:jspecify:1.0.0")
+    annotationProcessor("org.jspecify:jspecify:1.0.0")
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jlink {
+    imageZip.set(layout.buildDirectory.file("/distributions/app-${javafx.platform.classifier}.zip"))
+    options.set(["--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages"])
+    launcher {
+        name = "app"
+    }
+}

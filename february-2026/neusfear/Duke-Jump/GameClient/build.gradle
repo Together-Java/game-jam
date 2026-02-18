@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'application'
+}
+
+application {
+    mainClass.set("com.terminalvelocitycabbage.dukejump.DukeGameClient")
+    executableDir = file("run").absolutePath
+}
+
+apply from: file('../TerminalVelocityEngine2/gradleScripts/repositories.gradle')
+apply from: file('../TerminalVelocityEngine2/gradleScripts/dependenciesClient.gradle')
+
+dependencies {
+    implementation project(':TerminalVelocityEngine2')
+}
